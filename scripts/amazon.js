@@ -85,3 +85,4 @@ button.addEventListener('click', () => {
     updateCartQuantity();
   });    
 }); 
+console.log(products[0]);
