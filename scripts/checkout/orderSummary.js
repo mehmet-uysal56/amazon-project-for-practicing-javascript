@@ -3,6 +3,7 @@ import {products} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import {deliveryOptions} from '../../data/deliveryOptions.js'
+import { renderPaymentSummary } from './paymentSummary.js';
 
 
 const today = dayjs();
@@ -95,7 +96,7 @@ const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
       const priceString = deliveryOption.priceCents === 0
       ? 'FREE'
       : `$${formatCurrency(deliveryOption.priceCents)} -`;
-      const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+      const isChecked = (deliveryOption.id === (cartItem.deliveryOptionId || '1'));
       html +=`<div class="delivery-option js-delivery-option"
       data-product-id="${matchingProduct.id}"
       data-delivery-option-id="${deliveryOption.id}">
@@ -129,6 +130,7 @@ const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
    
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
     container.remove();
+    renderPaymentSummary();
   });
 });
   
@@ -142,6 +144,7 @@ const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
     
     
     renderOrderSummary();
+    renderPaymentSummary();
   });
 });
 }
