@@ -39,13 +39,61 @@ class Product {
         </a>
       `;
     }
-
   }
   
+export let products = [];
 
 
+export function loadProductsFetch() {
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
+  ).then((response) => {
+    return response.json();
+  }).then((productsData) => {
+    products = productsData.map((productDetails) => {
+      
+      if (productDetails.type === 'clothing') {
+        return new Clothing(productDetails);
+      }
 
-export const products = [
+      return new Product(productDetails);
+    });
+
+    console.log('load products');
+  }).catch((error) => {
+  console.log('Unexpected error. PLease try again later.');
+  });
+
+  return promise;
+}
+
+
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest()
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetails) =>{
+  if (productDetails.type === 'clothing') {
+    return new Clothing(productDetails)
+  }
+  return new Product(productDetails);
+
+});
+console.log('load products');
+  fun();
+  });
+
+  xhr.addEventListener('error', (error)=>{
+    console.log('Unexpected error. PLease try again later.');
+
+  });
+
+
+  xhr.open('GET','https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
+
+/*export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -710,4 +758,4 @@ export const products = [
   }
   return new Product(productDetails);
 
-});
+}); */
